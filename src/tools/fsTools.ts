@@ -753,7 +753,9 @@ function summarizeProcessOutput(output: string, maxChars: number): { text: strin
 // mislabelled. Observed: an agent stalled re-running a grep with an unescaped
 // backtick (`… struct|`json"`) that zsh rejected as `unmatched "`.
 const SHELL_PARSE_ERROR =
-  /(?:^|\n)\s*(?:zsh|bash|sh|dash)[:\s][^\n]*\b(?:unmatched|parse error|bad substitution|unexpected EOF|syntax error|unexpected end of file)\b/i;
+  // The shell prefix is argv[0] verbatim: zsh prints a bare `zsh:`, but bash
+  // echoes the full spawn path (`/bin/bash: -c: line 0: ...`) — allow both.
+  /(?:^|\n)\s*(?:\S*\/)?(?:zsh|bash|sh|dash)[:\s][^\n]*\b(?:unmatched|parse error|bad substitution|unexpected EOF|syntax error|unexpected end of file)\b/i;
 
 export function isShellParseError(output: string): boolean {
   return SHELL_PARSE_ERROR.test(output);
