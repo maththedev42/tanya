@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tanya.local/schemas/boot-smoke.schema.json",
+  "title": "Tanya boot-smoke checks",
+  "description": "Schema for .tanya/boot-smoke.json. When a run edits files matching a check's trigger glob, that check's command is added to the verify-gate's required set — it must run with passing evidence before the run can report success. Guards infra edits (e.g. migrations) against breaking service boot.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["checks"],
+  "properties": {
+    "checks": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/check" }
+    }
+  },
+  "$defs": {
+    "check": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["trigger", "command"],
+      "properties": {
+        "trigger": {
+          "type": "string",
+          "description": "Glob matched against the run's changed files (supports * and **). e.g. \"**/migrations/*.sql\"."
+        },
+        "command": {
+          "type": "string",
+          "description": "Shell command the agent must run with passing evidence when the trigger matches. e.g. \"cosmohq restart cosmohq\"."
+        },
+        "healthCheck": {
+          "type": "string",
+          "description": "Optional health-check URL to poll after the command (surfaced to the agent). e.g. \"http://localhost:3003/healthz\"."
+        }
+      }
+    }
+  }
+}

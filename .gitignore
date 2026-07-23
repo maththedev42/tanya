@@ -1,0 +1,13 @@
+node_modules
+dist
+.env
+.tanya
+# Legacy dot-dir (pre-rename) — old binaries still write it before migration.
+.tania
+/integrations/
+*.log
+
+# Local project-instructions file — may hold machine-specific paths.
+# Project rules for the public repo belong in .tanya/INSTRUCTIONS.md.
+TANYA.md
+.planning/

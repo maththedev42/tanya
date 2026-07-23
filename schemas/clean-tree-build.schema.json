@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tanya.local/schemas/clean-tree-build.schema.json",
+  "title": "Tanya clean-tree build check",
+  "description": "Schema for .tanya/clean-tree-build.json. Opt-in: after a run commits, Tanya checks out HEAD into a throwaway git worktree and runs `command` there. If it fails, the run is blocked — this catches a committed file that references an untracked one (green in the dirty worktree, broken from a clean checkout).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["command"],
+  "properties": {
+    "command": {
+      "type": "string",
+      "description": "Build/compile command run in the clean HEAD worktree via `bash -lc`. e.g. \"swift build\", \"go build ./...\", \"npm ci && npm run build\"."
+    },
+    "trigger": {
+      "type": "string",
+      "description": "Optional glob (supports * and **). When set, the check only runs if a changed file matches. e.g. \"**/*.swift\". Omit to run on every commit."
+    },
+    "timeoutMs": {
+      "type": "number",
+      "description": "Optional build timeout in milliseconds (default 300000)."
+    }
+  }
+}
